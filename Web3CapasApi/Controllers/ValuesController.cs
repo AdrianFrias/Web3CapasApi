@@ -24,7 +24,14 @@ namespace Web3CapasApi.Controllers
         [Route("Buscar")]
         public List<Usuario> Buscar(string valor)
         {
-            return neg.Buscar("");
+            if (valor != null)
+            {
+                return neg.Buscar(valor);
+            }
+            else
+            {
+                return neg.Obtener();
+            }
         }
 
         // GET api/values/5

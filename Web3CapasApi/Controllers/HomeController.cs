@@ -29,6 +29,22 @@ namespace Web3CapasApi.Controllers
             }
             return View();
         }
+        public ActionResult Buscar(string valor)
+        {
+            List<Usuario> usuarios = new List<Usuario>();
+            using (HttpClient cliente = new HttpClient())
+            {
+                cliente.BaseAddress = new Uri("http://localhost:59777/");
+                var request = cliente.GetAsync($"Buscar?valor={valor}").Result;
+                if (request.IsSuccessStatusCode)
+                {
+                    string resulatdo = request.Content.ReadAsStringAsync().Result;
+                    usuarios = JsonConvert.DeserializeObject<List<Usuario>>(resulatdo);
+                    return View("Index", usuarios);
+                }
+            }
+            return RedirectToAction("Index");
+        }
         public ActionResult Agregar()
         {
             return View();
