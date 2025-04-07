@@ -26,5 +26,8 @@ namespace DataUsuarios.Modelo
         }
     
         public virtual DbSet<Usuario> Usuario { get; set; }
+        public virtual DbSet<Contacto> Contacto { get; set; }
+        public virtual DbSet<Intermedio> Intermedio { get; set; }
+        public virtual DbSet<MediosDeContacto> MediosDeContacto { get; set; }
     }
 }

@@ -29,6 +29,7 @@ namespace Web3CapasApi.Controllers
             }
             return View();
         }
+
         public ActionResult Buscar(string valor)
         {
             List<Usuario> usuarios = new List<Usuario>();

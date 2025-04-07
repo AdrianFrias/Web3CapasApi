@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
@@ -10,6 +12,9 @@ namespace Web3CapasApi
         public static void Register(HttpConfiguration config)
         {
             // Configuración y servicios de API web
+
+            // Configura la serialización JSON globalmente
+            config.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
 
             // Rutas de API web
             config.MapHttpAttributeRoutes();

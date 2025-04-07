@@ -4,7 +4,36 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="generacion31Model.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="generacion31Model.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Contacto">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Nombre" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="ApPaterno" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="ApMaterno" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="UsuarioId" Type="int" Nullable="false" />
+          <Property Name="Edad" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Foto" Type="varchar" MaxLength="200" />
+        </EntityType>
+        <EntityType Name="Intermedio">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ContactoId" Type="int" Nullable="false" />
+          <Property Name="MediosDeContactoId" Type="int" Nullable="false" />
+          <Property Name="informacion" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="MediosDeContacto">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Nombre" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Status" Type="bit" Nullable="false" />
+        </EntityType>
         <EntityType Name="Usuario">
           <Key>
             <PropertyRef Name="Id" />
@@ -19,11 +48,61 @@
           <Property Name="Foto" Type="varchar" MaxLength="200" Nullable="false" />
           <Property Name="Telefono" Type="varchar" MaxLength="50" Nullable="false" />
         </EntityType>
+        <Association Name="FK_Contacto_Usuario">
+          <End Role="Usuario" Type="Self.Usuario" Multiplicity="1" />
+          <End Role="Contacto" Type="Self.Contacto" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Usuario">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Contacto">
+              <PropertyRef Name="UsuarioId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Intermedio_Contacto">
+          <End Role="Contacto" Type="Self.Contacto" Multiplicity="1" />
+          <End Role="Intermedio" Type="Self.Intermedio" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Contacto">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Intermedio">
+              <PropertyRef Name="ContactoId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Intermedio_MediosDeContacto">
+          <End Role="MediosDeContacto" Type="Self.MediosDeContacto" Multiplicity="1" />
+          <End Role="Intermedio" Type="Self.Intermedio" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MediosDeContacto">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Intermedio">
+              <PropertyRef Name="MediosDeContactoId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityContainer Name="generacion31ModelStoreContainer">
+          <EntitySet Name="Contacto" EntityType="Self.Contacto" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Intermedio" EntityType="Self.Intermedio" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="MediosDeContacto" EntityType="Self.MediosDeContacto" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Usuario" EntityType="Self.Usuario" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Contacto_Usuario" Association="Self.FK_Contacto_Usuario">
+            <End Role="Usuario" EntitySet="Usuario" />
+            <End Role="Contacto" EntitySet="Contacto" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Intermedio_Contacto" Association="Self.FK_Intermedio_Contacto">
+            <End Role="Contacto" EntitySet="Contacto" />
+            <End Role="Intermedio" EntitySet="Intermedio" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Intermedio_MediosDeContacto" Association="Self.FK_Intermedio_MediosDeContacto">
+            <End Role="MediosDeContacto" EntitySet="MediosDeContacto" />
+            <End Role="Intermedio" EntitySet="Intermedio" />
+          </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="generacion31Model" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -40,10 +119,96 @@
           <Property Name="Password" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Foto" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Telefono" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Contacto" Relationship="generacion31Model.FK_Contacto_Usuario" FromRole="Usuario" ToRole="Contacto" />
         </EntityType>
         <EntityContainer Name="generacion31Entities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Usuario" EntityType="Self.Usuario" />
+          <EntitySet Name="Contacto" EntityType="generacion31Model.Contacto" />
+          <AssociationSet Name="FK_Contacto_Usuario" Association="generacion31Model.FK_Contacto_Usuario">
+            <End Role="Usuario" EntitySet="Usuario" />
+            <End Role="Contacto" EntitySet="Contacto" />
+          </AssociationSet>
+          <EntitySet Name="Intermedio" EntityType="generacion31Model.Intermedio" />
+          <EntitySet Name="MediosDeContacto" EntityType="generacion31Model.MediosDeContacto" />
+          <AssociationSet Name="FK_Intermedio_Contacto" Association="generacion31Model.FK_Intermedio_Contacto">
+            <End Role="Contacto" EntitySet="Contacto" />
+            <End Role="Intermedio" EntitySet="Intermedio" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Intermedio_MediosDeContacto" Association="generacion31Model.FK_Intermedio_MediosDeContacto">
+            <End Role="MediosDeContacto" EntitySet="MediosDeContacto" />
+            <End Role="Intermedio" EntitySet="Intermedio" />
+          </AssociationSet>
         </EntityContainer>
+        <EntityType Name="Contacto">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nombre" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ApPaterno" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ApMaterno" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="UsuarioId" Type="Int32" Nullable="false" />
+          <Property Name="Edad" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Foto" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Usuario" Relationship="generacion31Model.FK_Contacto_Usuario" FromRole="Contacto" ToRole="Usuario" />
+          <NavigationProperty Name="Intermedio" Relationship="generacion31Model.FK_Intermedio_Contacto" FromRole="Contacto" ToRole="Intermedio" />
+        </EntityType>
+        <Association Name="FK_Contacto_Usuario">
+          <End Type="generacion31Model.Usuario" Role="Usuario" Multiplicity="1" />
+          <End Type="generacion31Model.Contacto" Role="Contacto" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Usuario">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Contacto">
+              <PropertyRef Name="UsuarioId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Intermedio">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ContactoId" Type="Int32" Nullable="false" />
+          <Property Name="MediosDeContactoId" Type="Int32" Nullable="false" />
+          <Property Name="informacion" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Contacto" Relationship="generacion31Model.FK_Intermedio_Contacto" FromRole="Intermedio" ToRole="Contacto" />
+          <NavigationProperty Name="MediosDeContacto" Relationship="generacion31Model.FK_Intermedio_MediosDeContacto" FromRole="Intermedio" ToRole="MediosDeContacto" />
+        </EntityType>
+        <EntityType Name="MediosDeContacto">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nombre" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Status" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Intermedio" Relationship="generacion31Model.FK_Intermedio_MediosDeContacto" FromRole="MediosDeContacto" ToRole="Intermedio" />
+        </EntityType>
+        <Association Name="FK_Intermedio_Contacto">
+          <End Type="generacion31Model.Contacto" Role="Contacto" Multiplicity="1" />
+          <End Type="generacion31Model.Intermedio" Role="Intermedio" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Contacto">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Intermedio">
+              <PropertyRef Name="ContactoId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Intermedio_MediosDeContacto">
+          <End Type="generacion31Model.MediosDeContacto" Role="MediosDeContacto" Multiplicity="1" />
+          <End Type="generacion31Model.Intermedio" Role="Intermedio" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MediosDeContacto">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Intermedio">
+              <PropertyRef Name="MediosDeContactoId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -62,6 +227,38 @@
                 <ScalarProperty Name="Password" ColumnName="Password" />
                 <ScalarProperty Name="Foto" ColumnName="Foto" />
                 <ScalarProperty Name="Telefono" ColumnName="Telefono" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Contacto">
+            <EntityTypeMapping TypeName="generacion31Model.Contacto">
+              <MappingFragment StoreEntitySet="Contacto">
+                <ScalarProperty Name="Foto" ColumnName="Foto" />
+                <ScalarProperty Name="Edad" ColumnName="Edad" />
+                <ScalarProperty Name="UsuarioId" ColumnName="UsuarioId" />
+                <ScalarProperty Name="ApMaterno" ColumnName="ApMaterno" />
+                <ScalarProperty Name="ApPaterno" ColumnName="ApPaterno" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Intermedio">
+            <EntityTypeMapping TypeName="generacion31Model.Intermedio">
+              <MappingFragment StoreEntitySet="Intermedio">
+                <ScalarProperty Name="informacion" ColumnName="informacion" />
+                <ScalarProperty Name="MediosDeContactoId" ColumnName="MediosDeContactoId" />
+                <ScalarProperty Name="ContactoId" ColumnName="ContactoId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MediosDeContacto">
+            <EntityTypeMapping TypeName="generacion31Model.MediosDeContacto">
+              <MappingFragment StoreEntitySet="MediosDeContacto">
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

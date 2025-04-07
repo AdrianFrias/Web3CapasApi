@@ -9,30 +9,22 @@
 
 namespace DataUsuarios.Modelo
 {
-    using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
     
-    public partial class Usuario
+    public partial class MediosDeContacto
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Usuario()
+        public MediosDeContacto()
         {
-            this.Contacto = new HashSet<Contacto>();
+            this.Intermedio = new HashSet<Intermedio>();
         }
     
         public int Id { get; set; }
-        public string Nombres { get; set; }
-        public string Paterno { get; set; }
-        public string Materno { get; set; }
-        public string Correo { get; set; }
-        public string NickName { get; set; }
-        public string Password { get; set; }
-        public string Foto { get; set; }
-        public string Telefono { get; set; }
+        public string Nombre { get; set; }
+        public bool Status { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        [JsonIgnore]
-        public virtual ICollection<Contacto> Contacto { get; set; }
+        public virtual ICollection<Intermedio> Intermedio { get; set; }
     }
 }

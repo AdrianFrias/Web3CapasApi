@@ -4,8 +4,14 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="821fcbc187b044d9ae22509a4ac60e12" Name="Diagram1">
+      <Diagram DiagramId="821fcbc187b044d9ae22509a4ac60e12" Name="Diagram1" ZoomLevel="86">
         <EntityTypeShape EntityType="generacion31Model.Usuario" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="generacion31Model.Contacto" Width="1.5" PointX="3" PointY="1" />
+        <AssociationConnector Association="generacion31Model.FK_Contacto_Usuario" />
+        <EntityTypeShape EntityType="generacion31Model.Intermedio" Width="1.5" PointX="5.25" PointY="1.25" />
+        <EntityTypeShape EntityType="generacion31Model.MediosDeContacto" Width="1.5" PointX="3" PointY="5.5" />
+        <AssociationConnector Association="generacion31Model.FK_Intermedio_Contacto" />
+        <AssociationConnector Association="generacion31Model.FK_Intermedio_MediosDeContacto" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

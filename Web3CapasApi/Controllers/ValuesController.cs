@@ -13,11 +13,29 @@ namespace Web3CapasApi.Controllers
     public class ValuesController : ApiController
     {
         NegUsuario neg = new NegUsuario();
+        NegContacto negC = new NegContacto();
+        NegIntermedio negI = new NegIntermedio();
         // GET api/values
         [HttpGet]
         public List<Usuario> Obtener()
         {
             return neg.Obtener();
+        }
+
+        [HttpGet]
+        [Route("api/values/ObtenerContactos")]
+        public List<Contacto> ObtenerContacto()
+        {
+            List<Contacto> lista = negC.ObtenerL();
+            return lista;
+        }
+
+        [HttpGet]
+        [Route("api/values/ObtenerIntermedios")]
+        public List<Intermedio> ObtenerIntermedio()
+        {
+            List<Intermedio> lista = negI.Obtener();
+            return lista;
         }
 
         [HttpGet]
